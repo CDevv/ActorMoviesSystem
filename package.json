@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "tailwind": "npx tailwindcss -i ./frontend/tail.css -o ./frontend/styles.css --watch",
     "frontend": "live-server ./frontend/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

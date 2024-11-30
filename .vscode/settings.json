@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "ActorMovies"
+    "liveServer.settings.root": "./frontend/",
+    "liveServer.settings.fullReload": true
 }
