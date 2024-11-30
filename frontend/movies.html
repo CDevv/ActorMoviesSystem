@@ -6,7 +6,27 @@
     <title>Document</title>
     <link href="styles.css" rel="stylesheet">
 </head>
-<body>
-    <p class="text-3xl underline text-bold">Movies</p>
+<body class="bg-gray-800 text-white">
+    <p class="text-3xl text-bold bg-gray-900 p-4">ActorMovies - Movies</p>
+    <br>
+    <a href="./" class="bg-gray-900 rounded-lg m-4 p-2">Go Back</a>
+    <div class="bg-gray-900 rounded-lg m-4 p-4">
+        <form class="flex flex-col gap-4">
+            <label for="movie-name">Movie Name</label>
+            <input id="movie-name" type="text" placeholder="Movie Name" class="bg-gray-800 rounded-lg">
+
+            <label for="movie-release-date">Movie Release Date</label>
+            <input id="movie-release-date" type="datetime-local" value="today" class="bg-gray-800 rounded-lg">
+
+            <input type="submit" value="Submit" class="bg-gray-800 rounded-lg">
+        </form>
+    </div>
+    <div id="movies-list" class="flex flex-col gap-4 m-4">
+        <div class="bg-gray-900 p-4 rounded-lg">
+            <h1 class="text-xl">Movie Name</h1>
+            <p>Movie released on: </p>
+        </div>
+    </div>
+    <script src="js/movies.js"></script>
 </body>
 </html>
