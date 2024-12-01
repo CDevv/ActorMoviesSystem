@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "backend": "node ./backend/server.js",
     "tailwind": "npx tailwindcss -i ./frontend/tail.css -o ./frontend/styles.css --watch",
     "frontend": "live-server ./frontend/",
     "test": "jest"
