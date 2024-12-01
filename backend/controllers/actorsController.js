@@ -26,6 +26,8 @@ async function updateActor(id, name, birthDate) {
             where: { id }
         }
     )
+    const updatedActor = await getActor(id)
+    return updatedActor
 }
 
 async function deleteActor(id) {

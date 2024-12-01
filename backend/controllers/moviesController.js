@@ -26,6 +26,8 @@ async function updateMovie(id, title, releaseDate) {
             where: {id}
         }
     )
+    const updatedMovie = await getMovie(id)
+    return updatedMovie
 }
 
 async function deleteMovie(id) {

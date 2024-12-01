@@ -1,8 +1,14 @@
 const dbFile = 'db.sqlite'
 
 const sqlite3 = require('sqlite3').verbose()
-//import { sqlite3 } from "sqlite3";
-const db = new sqlite3.Database(dbFile)
+
+let db
+
+if (process.env.NODE_ENV === 'test') {
+    db = new sqlite3.Database(':memory:')
+} else {
+    db = new sqlite3.Database(dbFile)
+}
 
 function defaultTables()
 {
