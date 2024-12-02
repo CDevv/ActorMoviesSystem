@@ -1,4 +1,6 @@
 const { Actor } = require('../models/actor')
+const { Movie } = require('../models/movie')
+const { ActorMovie } = require('../models/actorMovies')
 
 async function createActor(name, birthDate) {
    const newActor = await Actor.create({
@@ -8,13 +10,26 @@ async function createActor(name, birthDate) {
 }
 
 async function getActors() {
-    const actors = Actor.findAll()
+    const actors = Actor.findAll({ include: [
+        {
+            model: Movie,
+            through: {
+                attributes: ['role']
+            }
+        }
+    ] })
     return actors
 }
 
 async function getActor(id) {
     const actor = Actor.findOne({ 
-        where: {id}
+        where: {id},
+        include: [{
+            model: Movie,
+            through: {
+                attributes: ['role']
+            }
+        }]
      })
     return actor
 }
@@ -31,6 +46,9 @@ async function updateActor(id, name, birthDate) {
 }
 
 async function deleteActor(id) {
+    await ActorMovie.destroy({
+        where: {actorId: id}
+    })
     await Actor.destroy({
         where: {id}
     })
