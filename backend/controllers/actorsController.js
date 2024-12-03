@@ -6,7 +6,7 @@ async function createActor(name, birthDate) {
    const newActor = await Actor.create({
         name, birthDate
    }) 
-   return newActor.id
+   return newActor
 }
 
 async function getActors() {

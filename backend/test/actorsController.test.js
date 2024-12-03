@@ -23,6 +23,8 @@ afterEach(async () => {
 test('createActor', () => {
     return createActor('John', Date.now() / 1000).then((data) => {
         expect(data).toBeDefined()
+        expect(data.name).toBe('John')
+        expect(data.id).toBe(3)
     })
 })
 

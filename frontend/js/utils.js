@@ -1,3 +1,17 @@
+let editAction = -1
+let associationAction = -1
+
+function resetActions() {
+    editAction = -1
+    associationAction = -1
+}
+
+function getCurrentState() {
+    return {
+        editAction, associationAction
+    }
+}
+
 function addItemDOM(parent, itemBody, options) {
     const item = document.createElement('div')
     item.id = `item-${itemBody.id}`
@@ -30,15 +44,15 @@ function addItemDOM(parent, itemBody, options) {
     item.appendChild(actionsContainer)
 
     const addAssociation = document.createElement('button')
-    addAssociation.innerHTML = 'Add Movie'
+    addAssociation.innerHTML = options.addAssociationTitle
     addAssociation.className = 'bg-gray-800 p-2 rounded-lg'
-    addAssociation.addEventListener('click', () => options.onAssociationForm(itemBody.id))
+    addAssociation.addEventListener('click', () => associationFormDOM(itemBody.id))
     actionsContainer.appendChild(addAssociation)
 
     const editAction = document.createElement('button')
     editAction.innerHTML = 'Edit'
     editAction.className = 'bg-gray-800 p-2 rounded-lg'
-    editAction.addEventListener('click', () => options.onEditForm(itemBody.id))
+    editAction.addEventListener('click', () => editFormDOM(itemBody.id))
     actionsContainer.appendChild(editAction)
 
     const deleteAction = document.createElement('button')
@@ -92,7 +106,7 @@ async function createItem(url, body, onSuccess) {
     const item = await res.json()
 
     if (item !== null) {
-        onSuccess(item, body)
+        onSuccess(item)
     }
 }
 
@@ -149,4 +163,57 @@ function toggleVisibility(element) {
     }
 }
 
-export { createItem, fetchData, fetchItem, addItemDOM, editItemDOM, editItem, deleteItem, createAssociation, toggleVisibility }
+function editFormDOM(id) {
+    const item = document.getElementById(`item-${id}`)
+    const editForm = document.getElementById('edit-form')
+
+    if (editAction === id) {
+        toggleVisibility(editForm)
+    } else {
+        editAction = id
+        editForm.classList.remove('hidden')
+
+        editForm.parentElement.removeChild(editForm)
+        item.appendChild(editForm)
+
+        if (editAction === associationAction) {
+            document.getElementById('association-form').classList.add('hidden')
+            associationAction = -1
+        }
+    }
+}
+
+function editItemTitleDOM(id, title, date) {
+    const itemTitle = document.getElementById(`item-title-${id}`)
+    itemTitle.innerHTML = title
+
+    const itemDate = document.getElementById(`item-date-${id}`)
+    itemDate.innerHTML = `${new Date(date).toDateString()}`
+
+    toggleVisibility(document.getElementById('edit-form'))
+}
+
+function associationFormDOM(id) {
+    const item = document.getElementById(`item-${id}`)
+    const movieForm = document.getElementById('association-form')
+
+    movieForm.parentElement.removeChild(movieForm)
+    item.appendChild(movieForm)
+
+    if (associationAction === id) {
+        toggleVisibility(movieForm)
+    } else {
+        associationAction = id
+        movieForm.classList.remove('hidden')
+
+        movieForm.parentElement.removeChild(movieForm)
+        item.appendChild(movieForm)
+
+        if (editAction === associationAction) {
+            document.getElementById('edit-form').classList.add('hidden')
+            editAction = -1
+        }
+    }
+}
+
+export { resetActions, getCurrentState, createItem, fetchData, fetchItem, addItemDOM, editItemDOM, editItemTitleDOM, editItem, deleteItem, createAssociation, toggleVisibility }

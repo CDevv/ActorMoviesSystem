@@ -22,7 +22,28 @@
         </form>
     </div>
     <div id="movies-list" class="flex flex-col gap-4 m-4">
+        <form id="edit-form" class="flex flex-col gap-4 hidden">
+            <h1 class="text-xl">Edit</h1>
+            <label for="edit-movie-title">Movie Title</label>
+            <input id="edit-movie-title" type="text" placeholder="Movie Title" class="bg-gray-800 rounded-lg">
+
+            <label for="edit-movie-release-date">Movie Release Date</label>
+            <input id="edit-movie-release-date" type="datetime-local" value="today" class="bg-gray-800 rounded-lg">
+
+            <input type="submit" value="Submit" class="bg-gray-800 rounded-lg">
+        </form>
+        <form id="association-form" class="flex flex-col gap-4 hidden">
+            <h1 class="text-xl">Add Actor</h1>
+            <label for="association-id">Actor</label>
+            <select id="association-id" class="bg-gray-800 rounded-lg">
+            </select>
+
+            <label for="association-role">Role</label>
+            <input id="association-role" type="text" value="" placeholder="Role.." class="bg-gray-800 rounded-lg">
+
+            <input type="submit" value="Submit" class="bg-gray-800 rounded-lg">
+        </form>
     </div>
-    <script src="js/movies.js"></script>
+    <script type="module" src="js/movies.js"></script>
 </body>
 </html>

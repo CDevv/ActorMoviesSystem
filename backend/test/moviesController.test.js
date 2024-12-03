@@ -19,7 +19,7 @@ beforeAll(async () => {
 test('createMovie', () => {
     return createMovie('ExampleMovie', Date.now() / 1000).then((data) => {
         expect(data).toBeDefined()
-        expect(data).toBe(3)
+        expect(data.id).toBe(3)
     })
 })
 

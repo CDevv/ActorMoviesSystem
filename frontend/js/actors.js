@@ -1,9 +1,6 @@
-import { addItemDOM, fetchData, createItem, editItem, deleteItem, toggleVisibility, createAssociation, fetchItem, editItemDOM } from './utils.js'
+import { addItemDOM, fetchData, createItem, editItem, deleteItem, toggleVisibility, createAssociation, fetchItem, editItemDOM, getCurrentState, editItemTitleDOM } from './utils.js'
 
 const baseURL = 'http://localhost:3000/api/actors'
-let currentId = -1
-let editAction = -1
-let associationAction = -1
 
 function addActorDOM(actor) {
     addItemDOM(document.getElementById('actors-list'), {
@@ -12,10 +9,9 @@ function addActorDOM(actor) {
         date: actor.birthDate,
         associations: actor.Movies
     }, {
-        onEditForm: editFormDOM,
         onDelete: deleteActor,
         onAssociation: onMovieAdded,
-        onAssociationForm: movieFormDOM,
+        addAssociationTitle: 'Add Movie'
     })
 }
 
@@ -40,62 +36,15 @@ async function loadData() {
 async function createActor(name, birthDate) {
     await createItem(baseURL, {
         name, birthDate
-    }, (id, actor) => {
-        addActorDOM({
-            id, name: actor.name, birthDate: actor.birthDate
-        })
+    }, (actor) => {
+        addActorDOM(actor)
     })
-}
-
-function editFormDOM(id) {
-    const item = document.getElementById(`item-${id}`)
-    const editForm = document.getElementById('edit-form')
-
-    if (editAction === id) {
-        toggleVisibility(editForm)
-    } else {
-        currentId = id
-        editAction = id
-        editForm.classList.remove('hidden')
-
-        editForm.parentElement.removeChild(editForm)
-        item.appendChild(editForm)
-
-        if (editAction === associationAction) {
-            toggleVisibility(document.getElementById('association-form'))
-            associationAction = -1
-        }
-    }
-}
-
-function movieFormDOM(id) {
-    const item = document.getElementById(`item-${id}`)
-    const movieForm = document.getElementById('association-form')
-
-    movieForm.parentElement.removeChild(movieForm)
-    item.appendChild(movieForm)
-
-    if (currentId === id) {
-        toggleVisibility(movieForm)
-    } else {
-        currentId = id
-        associationAction = id
-        movieForm.classList.remove('hidden')
-
-        movieForm.parentElement.removeChild(movieForm)
-        item.appendChild(movieForm)
-
-        if (editAction === associationAction) {
-            toggleVisibility(document.getElementById('edit-form'))
-            editAction = -1
-        }
-    }
 }
 
 async function editActor(id, name, birthDate) {
     await editItem(`${baseURL}/${id}`, {
         name, birthDate
-    }, (actor) => editActorDOM(actor.id, actor.name, actor.birthDate))
+    }, (actor) => editItemTitleDOM(actor.id, actor.name, actor.birthDate))
 }
 
 async function deleteActor(id) {
@@ -104,16 +53,6 @@ async function deleteActor(id) {
         const actor = document.getElementById(`item-${id}`)
         container.removeChild(actor)
     })
-}
-
-function editActorDOM(id, name, birthDate) {
-    const actorName = document.getElementById(`item-title-${id}`)
-    actorName.innerHTML = name
-
-    const actorBirthDate = document.getElementById(`item-date-${id}`)
-    actorBirthDate.innerHTML = `${new Date(birthDate).toDateString()}`
-
-    toggleVisibility(document.getElementById('edit-form'))
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -135,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     editForm.addEventListener('submit', async (ev) => {
         ev.preventDefault()
-        await editActor(currentId, editActorName.value, new Date(editActorBirthDate.value).getTime())
+        await editActor(getCurrentState().editAction, editActorName.value, new Date(editActorBirthDate.value).getTime())
     })
 
     const associationForm = document.getElementById('association-form')
@@ -144,15 +83,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     associationForm.addEventListener('submit', async (ev) => {
         ev.preventDefault()
-        console.log(associationAction)
         await createAssociation({
-            actorId: associationAction, 
+            actorId: getCurrentState().associationAction, 
             movieId: associationId.value,
             role: associationRole.value 
         }, async (actorMovie) => {
             toggleVisibility(document.getElementById('association-form'))
-            const actor = await fetchItem(`${baseURL}/${associationAction}`)
-            editItemDOM(associationAction, {
+            const actor = await fetchItem(`${baseURL}/${getCurrentState().associationAction}`)
+            editItemDOM(getCurrentState().associationAction, {
                 title: actor.name,
                 date: actor.birthDate,
                 associations: actor.Movies
