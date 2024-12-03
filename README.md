@@ -7,10 +7,11 @@ A school project with a JS backend and frontend. This project uses:
 * Sequelize
 
 # Setting up
-For now, oyu can just run the frontend. These are the steps for setting it up on your machine and running it.
+Install the required npm packages and then run the backend server
 
 ```
 npm install
-npm install -g live-server
-npm run frontend
+npm run backend
 ```
+
+To run the frontend, you can use the [Live Server VSCOde extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
